@@ -1,0 +1,78 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v1",
+        "update_url": null
+    },
+    "exported_at": "2022-01-09T12:29:24-03:00",
+    "name": "Paper",
+    "author": "yan.mf@outlook.com",
+    "description": "",
+    "features": [
+        "eula",
+        "java_version",
+        "pid_limit"
+    ],
+    "images": [
+        "ghcr.io\/zgumelobr\/pterodactyl:java_8",
+        "ghcr.io\/zgumelobr\/pterodactyl:java_7",
+        "ghcr.io\/zgumelobr\/pterodactyl:java_11",
+        "ghcr.io\/zgumelobr\/pterodactyl:java_15",
+        "ghcr.io\/zgumelobr\/pterodactyl:java_16",
+        "ghcr.io\/zgumelobr\/pterodactyl:java_17",
+        "ghcr.io\/zgumelobr\/pterodactyl:java_18"
+    ],
+    "file_denylist": [],
+    "startup": "java -Xms{{SERVER_XMS_MEMORY}}M -Xmx{{SERVER_MEMORY}}M -Duser.timezone={{SERVER_TIMEZONE}} {{SERVER_FLAGS}} -jar {{SERVER_JARFILE}}",
+    "config": {
+        "files": "{\r\n    \"server.properties\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"server-ip\": \"0.0.0.0\",\r\n            \"server-port\": \"{{server.build.default.port}}\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \")! For help, type \",\r\n    \"userInteraction\": [\r\n        \"Go to eula.txt for more info.\"\r\n    ]\r\n}",
+        "logs": "{}",
+        "stop": "stop"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\napt update && apt install -y curl\r\ncd \/mnt\/server\r\ncurl -o server.jar https:\/\/papermc.io\/api\/v2\/projects\/paper\/versions\/1.8.8\/builds\/445\/downloads\/paper-1.8.8-445.jar\r\nif [ ! -f server.properties ]; then\r\ncurl -o server.properties https:\/\/raw.githubusercontent.com\/zGumeloBr\/pterodactyl-eggs\/main\/Minecraft\/Paper\/server.properties\r\nfi",
+            "container": "debian:buster-slim",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Arquivo .Jar",
+            "description": "[Startup Archive] Nome do arquivo .jar principal do servidor.",
+            "env_variable": "SERVER_JARFILE",
+            "default_value": "server.jar",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20"
+        },
+        {
+            "name": "JVM Flags",
+            "description": "[JVM startup flags] Flags de start para o servidor.",
+            "env_variable": "SERVER_FLAGS",
+            "default_value": "-Dterminal.jline=false -Dterminal.ansi=true",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string"
+        },
+        {
+            "name": "RAM miníma (MB)",
+            "description": "[Valor XMS] Define o valor minímo de RAM para o servidor iniciar. (OBS: Caso o valor do XMS sejá maior que a RAM total do servidor, o mesmo irá crashar)",
+            "env_variable": "SERVER_XMS_MEMORY",
+            "default_value": "128",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string"
+        },
+        {
+            "name": "Timezone",
+            "description": "[Container Timezone] Defina o horário do container para o seu servidor, lista de timezones: https://www.php.net/manual/pt_BR/timezones.php",
+            "env_variable": "SERVER_TIMEZONE",
+            "default_value": "America/Sao_Paulo",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string"
+        }
+    ]
+}
